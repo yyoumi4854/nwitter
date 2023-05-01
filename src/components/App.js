@@ -1,22 +1,16 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../routes/Home";
-import Auth from "../routes/Auth";
+
+import AppRouter from "./Router";
+import { authService } from "fbase";
 
 function App() {
+  console.log(authService.currentUser);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          {isLoggedIn ? (
-            <Route path="/" element={<Home />} />
-          ) : (
-            <Route path="/" element={<Auth />} />
-          )}
-        </Routes>
-      </BrowserRouter>
+      <AppRouter isLoggedIn={isLoggedIn} />
+      <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   );
 }
