@@ -10,6 +10,8 @@ import {
   query,
 } from "firebase/firestore";
 
+import Nweet from "components/Nweet";
+
 /**
 setNweet(prev => [document.data(), ...prev])
 set이 붙는 함수를 쓸 때, 값 대신에 함수를 전달할 수 있다.
@@ -81,9 +83,11 @@ const Home = ({ userObj }) => {
 
       <div>
         {nweets.map((nweet) => (
-          <div key={nweet.id}>
-            <h4>{nweet.text}</h4>
-          </div>
+          <Nweet
+            key={nweet.id}
+            nweetObj={nweet}
+            isOwner={nweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>
