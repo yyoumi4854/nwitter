@@ -11,7 +11,6 @@ const Nweet = ({ nweetObj, isOwner }) => {
 
   const onDeleteClick = async () => {
     const ok = window.confirm("정말 이 nweet을 삭제하시겠습니까?");
-    console.log(ok);
     if (ok) {
       // delete 부분
       await deleteDoc(NweetTextRef);

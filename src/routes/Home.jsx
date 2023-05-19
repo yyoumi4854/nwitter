@@ -13,6 +13,12 @@ import {
 import Nweet from "components/Nweet";
 
 /**
+onSnapshot을 통해 실시간 자동 업데이트를 구현
+onSnapshot은 기본적으로 데이터베이스에 무슨일이 있을 때, 알림을 받은것을 의미
+새로운 스냅샷을 받을 때 배열을 만들어 state에 배열을 집어 넣는다.
+ */
+
+/**
 setNweet(prev => [document.data(), ...prev])
 set이 붙는 함수를 쓸 때, 값 대신에 함수를 전달할 수 있다.
 그리고 만약 함수를 전달하면, 리액트는 이전 값에 접근할 수 있게 해준다.
