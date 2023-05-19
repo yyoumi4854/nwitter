@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { dbService } from "fbase";
-import { addDoc, collection, getDocs, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
 /**
 setNweet(prev => [document.data(), ...prev])
@@ -11,25 +19,24 @@ dbNweets안에 있는 모든 document에 대해 뭘 하고 있냐면, (setNweet�
 첫번째 배열은 가장 최근 document이고, 그 뒤로 이전 document를 붙인다.
  */
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
 
-  // async를 사용하기 위해 개별적인 함수로 만들어줘야 된다.
-  const getNweets = async () => {
-    const dbNweets = await getDocs(query(collection(dbService, "nweets")));
-
-    dbNweets.forEach((document) => {
-      const nweetObject = {
-        ...document.data(),
-        id: document.id,
-      };
-      setNweets((prev) => [nweetObject, ...prev]);
-    });
-  };
-
   useEffect(() => {
-    getNweets();
+    const q = query(
+      collection(dbService, "nweets"),
+      orderBy("createdAt", "desc")
+    );
+
+    // 데이터 실시간으로 자동 업데이트
+    onSnapshot(q, (snapshot) => {
+      const nweetArr = snapshot.docs.map((document) => ({
+        id: document.id,
+        ...document.data(),
+      }));
+      setNweets(nweetArr);
+    });
   }, []);
 
   const onSubmit = async (e) => {
@@ -39,8 +46,9 @@ const Home = () => {
       // addDoc로 firebase에 데이터 추가 (post 구현)
       // (명시된 데이터를 담은 새로운 document를 collections에 추가 -> document ID를 자동으로 부여)
       const docRef = await addDoc(collection(dbService, "nweets"), {
-        nweet,
+        text: nweet,
         createdAt: Date.now(),
+        creatorId: userObj.uid,
       });
       console.log("Document written with ID:", docRef.id);
     } catch (err) {
@@ -58,8 +66,6 @@ const Home = () => {
     setNweet(value);
   };
 
-  console.log(nweets);
-
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -72,10 +78,11 @@ const Home = () => {
         />
         <input type="submit" value="Nweet" />
       </form>
+
       <div>
         {nweets.map((nweet) => (
           <div key={nweet.id}>
-            <h4>{nweet.nweet}</h4>
+            <h4>{nweet.text}</h4>
           </div>
         ))}
       </div>
