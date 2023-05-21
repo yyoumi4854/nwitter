@@ -1,10 +1,19 @@
+/**
+파이어베이스는 유저 프로필에 많은 정보를 담을 수 없다.
+2가지 밖에 못가진다. (displayName, photoURL)
+email을 바꾸고 싶으면 다른 메소드를 써야된다. -> verifyBeforeUpdateEmail (예전버전)
+ */
+
 import { authService, dbService } from "fbase";
+import { updateProfile } from "firebase/auth";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Profile = ({ userObj }) => {
+const Profile = ({ refreshUser, userObj }) => {
   const navigate = useNavigate();
+
+  const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
 
   const onLogOutClick = () => {
     authService.signOut();
@@ -30,8 +39,35 @@ const Profile = ({ userObj }) => {
     getMyNweets();
   }, []);
 
+  const onChange = (e) => {
+    const {
+      target: { value },
+    } = e;
+    setNewDisplayName(value);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (userObj.displayName !== newDisplayName) {
+      await updateProfile(authService.currentUser, {
+        displayName: newDisplayName,
+      });
+      refreshUser();
+    }
+  };
+
   return (
     <>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          type="text"
+          placeholder="Display name"
+          value={newDisplayName}
+        />
+        <input type="submit" placeholder="Update Profile" />
+      </form>
       <button onClick={onLogOutClick}>Log Out</button>
     </>
   );
