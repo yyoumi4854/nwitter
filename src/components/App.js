@@ -17,6 +17,8 @@ function App() {
           updateProfile: (args) =>
             updateProfile(user, { displayName: user.displayName }),
         });
+      } else {
+        setUserObj(null);
       }
       setInit(true);
     });
@@ -43,7 +45,6 @@ function App() {
       ) : (
         "Initializing..."
       )}
-      {/* <footer>&copy; {new Date().getFullYear()} Nwitter</footer> */}
     </>
   );
 }
