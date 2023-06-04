@@ -8,6 +8,8 @@
 
 # 프로젝트 설명
 
+[nwitter 배포 링크](https://yyoumi4854.github.io/nwitter/)
+
 ### **firebase를 사용하기 위한 학습**
 
 firebase를 사용하여 아래의 기능을 구현했습니다.
@@ -16,6 +18,16 @@ firebase를 사용하여 아래의 기능을 구현했습니다.
 - 구글, 깃허브 회원가입/로그인 구현
 - 사용하여 CRUD 구현
 - 프로필 이미지 업로드 구현
+
+<br/><br/>
+
+# 프로젝트 실행
+
+```
+1. git clone https://github.com/yyoumi4854/nwitter.git
+2. npm install
+3. npm start
+```
 
 <br/><br/>
 
